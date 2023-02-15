@@ -1,10 +1,19 @@
+//const express = require("express");
 const bcrypt = require("bcrypt");
 const db = require("../Models");
 const jwt = require("jsonwebtoken");
-const sequelize = require('sequelize')
+//const sequelize = require('sequelize')
 // Assigning users to the variable User
 const User = db.users;
 
+//const router = express.Router();
+// const s = router.get("/", (req, res) => {
+//   User.findAll()
+//     .then((User) => {
+//       return res.json(User);
+//     })
+//     .catch((err) => console.log(err));
+// });
 //signing a user up
 //hashing users password before its saved to the database with bcrypt
 const signup = async (req, res) => {
@@ -13,10 +22,10 @@ const signup = async (req, res) => {
    const data = {
      userName,
      email,
-     password: await db.bcrypt.hash(password, 10),
+     password: await bcrypt.hash(password, 10),
    };
    //saving the user
-   const user = db.User.create(data);
+   const user = await User.create(data);
 
    //if user details is captured
    //generate token with the user's id and the secretKey in the env file
@@ -47,7 +56,7 @@ const login = async (req, res) => {
 const { email, password } = req.body;
 
    //find a user by their email
-   const user = db.User.findOne({
+   const user = User.findOne({
      where: {
      email : req.body.email
    } 
@@ -56,7 +65,9 @@ const { email, password } = req.body;
 
    //if user email is found, compare password with bcrypt
    if (user) {
-     const isSame = await bcrypt.compare(password, user.password);
+     const isSame = await bcrypt.compare(password, user.password,function(err, result) {
+    // result == true
+});
 
      //if password is the same
       //generate token with the user's id and the secretKey in the env file

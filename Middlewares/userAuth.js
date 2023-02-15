@@ -8,7 +8,7 @@ const db = require("../Models");
  const saveUser = async (req, res, next) => {
  //search the database to see if user exist
  try {
-   const username = await db.User.findOne({
+   const username = await User.findOne({
      where: {
        userName: req.body.userName,
      },
@@ -19,7 +19,7 @@ const db = require("../Models");
    }
 
    //checking if email already exist
-   const emailcheck = await db.User.findOne({
+   const emailcheck = await User.findOne({
      where: {
        email: req.body.email,
      },
